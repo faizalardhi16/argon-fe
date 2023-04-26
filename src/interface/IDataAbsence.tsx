@@ -6,6 +6,7 @@ export interface IDataAbsence {
 }
 
 export interface IDataAbsenceResponse {
+    id: string;
     clockIn: string;
     clockOut: string;
     firstName: string;

@@ -1,6 +1,7 @@
 import { IDataAbsence } from '@/interface/IDataAbsence'
 import React from 'react'
 import Button from './Button'
+import Link from 'next/link'
 
 
 
@@ -37,9 +38,11 @@ const TableAbsence: React.FC<TableAbsenceProps> = (props) => {
                                 {item.name}
                             </td>
                             <td className="px-6 py-4">
-                                <Button color="danger">
-                                    Edit
-                                </Button>
+                                <Link href={`/dashboard/edit/${item.id}`}>
+                                    <Button color="danger">
+                                        Edit
+                                    </Button>
+                                </Link>
                             </td>
                         </tr>
                     ))}

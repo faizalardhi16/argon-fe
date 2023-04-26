@@ -1,9 +1,20 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
+import { GetServerSideProps, GetServerSidePropsContext, PreviewData } from 'next'
+import { ParsedUrlQuery } from 'querystring'
+import { useEffect } from 'react'
+import { parseCookies, setCookie } from 'nookies'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export interface IHome {
+  result: string;
+}
+
+export default function Home({ result }: IHome) {
+  console.log(result, "RES")
+
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}

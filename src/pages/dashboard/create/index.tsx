@@ -5,26 +5,31 @@ import Input from '@/components/Input'
 import { IFormAbsence } from '@/interface/IFormAbsence'
 import Button from '@/components/Button'
 import { setHours } from '@/function/setHour'
-import axios from 'axios'
-import { absenceURL } from '@/constant/url'
-import { useLogin } from '@/store/loginStore'
 import useCreateAbsence from '@/api/useCreateAbsence'
+import withAuth from '@/components/PrivateRoute'
+import Swal from 'sweetalert2'
+import { useRouter } from 'next/router'
 
 const CreateAbsence = () => {
-    const user = useLogin();
+    const router = useRouter();
     const [form, setForm] = useState<IFormAbsence>({
-        clockIn: "",
-        clockOut: ""
+        clockIn: undefined,
+        clockOut: undefined
     });
 
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
         try {
-            const response = useCreateAbsence(form);
+            const response = await useCreateAbsence(form);
 
-            console.log(response)
+            router.push("/dashboard")
 
+            Swal.fire(
+                'Success Create Data!',
+                `${response.meta.message}`,
+                'success'
+            )
 
         } catch (error) {
             console.log(error, "ERRO")
@@ -36,8 +41,6 @@ const CreateAbsence = () => {
     }, [form])
 
 
-
-
     return (
         <div className="max-w-screen-xl flex flex-col items-center justify-center mx-auto p-4">
             <Text className="text-xl font-bold">
@@ -46,7 +49,7 @@ const CreateAbsence = () => {
 
             <Form className="w-8/12 mt-4" onSubmit={(e) => handleSubmit(e)} method="POST">
                 <div className="flex-row flex justify-between items-center w-full">
-                    <div className="w-1/2 mt-2">
+                    <div className="w-1/2 m-2">
                         <Input label="Waktu Masuk"
                             placeholder="Waktu Masuk"
                             className="w-3/4" type="datetime-local"
@@ -56,7 +59,7 @@ const CreateAbsence = () => {
                         />
                     </div>
 
-                    <div className="w-1/2 mt-2">
+                    <div className="w-1/2 m-2">
                         <Input label="Waktu Pulang"
                             placeholder="Waktu Masuk"
                             className="w-3/4"
@@ -83,4 +86,4 @@ const CreateAbsence = () => {
     )
 }
 
-export default CreateAbsence
+export default withAuth(CreateAbsence)

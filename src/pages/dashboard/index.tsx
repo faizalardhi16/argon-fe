@@ -10,6 +10,7 @@ import { render } from 'react-dom'
 import Button from '@/components/Button'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { setHours } from '@/function/setHour'
 
 
 export interface IDashboard {
@@ -32,13 +33,15 @@ const Dashboard: NextPage<IDashboard> = () => {
             const modifyData = res.data.map((item: IDataAbsenceResponse, index: number) => {
                 return {
                     ...item,
-                    clockIn: renderDate(item.clockIn),
-                    clockOut: renderDate(item.clockOut),
+                    clockIn: renderDate(setHours(item.clockIn)),
+                    clockOut: renderDate(setHours(item.clockOut)),
                     name: item.firstName + " " + item.lastName,
-                    id: index
+                    id: item.id
                 }
             })
             setDataAbsence(modifyData)
+
+
         }
 
         fetch()
@@ -57,7 +60,7 @@ const Dashboard: NextPage<IDashboard> = () => {
             </div>
             <TableAbsence
                 title={[
-                    "Clock In", "Clock Out", "Name"
+                    "Masuk", "Pulang", "Name"
                 ]}
                 data={
                     dataAbsence
