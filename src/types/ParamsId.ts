@@ -1,0 +1,1 @@
+export type ParamsId = string | string[] | undefined
