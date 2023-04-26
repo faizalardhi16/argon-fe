@@ -17,8 +17,8 @@ const TableAbsence: React.FC<TableAbsenceProps> = (props) => {
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        {[...props.title, "Action"].map((item) => (
-                            <th scope="col" className="px-6 py-3">
+                        {[...props.title, "Action"].map((item, index) => (
+                            <th scope="col" className="px-6 py-3" key={index}>
                                 {item}
                             </th>
                         ))}
@@ -27,9 +27,9 @@ const TableAbsence: React.FC<TableAbsenceProps> = (props) => {
                 <tbody>
                     {props.data.map((item: IDataAbsence, index) => (
                         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td className="px-6 py-4">
                                 {item.clockIn}
-                            </th>
+                            </td>
                             <td className="px-6 py-4">
                                 {item.clockOut}
                             </td>

@@ -1,8 +1,16 @@
 import withAuth from '@/components/PrivateRoute'
 import TableAbsence from '@/components/TableAbsence'
-import { IDataAbsence } from '@/interface/IDataAbsence'
-import { NextPage } from 'next'
-import React from 'react'
+import { IDataAbsence, IDataAbsenceResponse } from '@/interface/IDataAbsence'
+import { GetServerSideProps, NextPage } from 'next'
+import React, { useEffect, useState } from 'react'
+import { parseCookies, setCookie } from "nookies";
+import useGetAllAbsence from '@/api/useGetAllAbsence'
+import renderDate from '@/function/renderDate'
+import { render } from 'react-dom'
+import Button from '@/components/Button'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+
 
 export interface IDashboard {
 
@@ -15,18 +23,53 @@ const data: IDataAbsence[] = [
 
 
 const Dashboard: NextPage<IDashboard> = () => {
+
+    const [dataAbsence, setDataAbsence] = useState<IDataAbsence[]>([])
+
+    useEffect(() => {
+        async function fetch() {
+            const res = await useGetAllAbsence()
+            const modifyData = res.data.map((item: IDataAbsenceResponse, index: number) => {
+                return {
+                    ...item,
+                    clockIn: renderDate(item.clockIn),
+                    clockOut: renderDate(item.clockOut),
+                    name: item.firstName + " " + item.lastName,
+                    id: index
+                }
+            })
+            setDataAbsence(modifyData)
+        }
+
+        fetch()
+    }, []);
+
+
+
     return (
-        <div className="max-w-screen-xl bg-rose-600 flex items-center justify-center mx-auto p-4">
+        <div className="max-w-screen-xl bg-rose-600 flex flex-col items-center justify-center mx-auto p-4">
+            <div className="w-full mb-2">
+                <Link href={"/dashboard/create"}>
+                    <Button color="success" className="hover:opacity-90">
+                        Buat Absensi
+                    </Button>
+                </Link>
+            </div>
             <TableAbsence
                 title={[
                     "Clock In", "Clock Out", "Name"
                 ]}
                 data={
-                    data
+                    dataAbsence
                 }
             />
         </div>
     )
 }
 
+
 export default withAuth(Dashboard)
+function moment(myDate: any) {
+    throw new Error('Function not implemented.')
+}
+

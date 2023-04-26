@@ -17,9 +17,10 @@ class LoginStore{
         const data = localStorage.getItem("token")
 
         if(data){
-            return toJS(JSON.parse(data))
+            return toJS(data)
         }
-        return toJS(data)
+
+        return toJS(undefined)
     }
 
     setToken(){
