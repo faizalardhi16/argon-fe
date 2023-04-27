@@ -7,6 +7,6 @@ export const postCreateAbsence = absenceURL;
 export const detailUser = userURL + "/detail"
 export const detailAbsence = absenceURL + "/detail"
 export const updateProfile = profileURL
-
+export const uploadAvatar = profileURL + "/file"
 
 export {absenceURL, authURL, userURL}

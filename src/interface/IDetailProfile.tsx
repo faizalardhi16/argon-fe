@@ -4,4 +4,5 @@ export interface IDetailProfile {
     role: string;
     address: string;
     phoneNumber: string;
+    url: string | undefined;
 }

@@ -10,6 +10,9 @@ import Form from '@/components/Form';
 import useUpdateProfile from '@/api/useUpdateProfile';
 import Swal from 'sweetalert2';
 
+import apiConfig from '@/config/apiConfig';
+import { uploadAvatar } from '@/constant/url';
+
 
 export interface IProfile {
 
@@ -21,8 +24,10 @@ const Profile: NextPage<IProfile> = () => {
         lastName: "",
         address: "",
         role: "",
-        phoneNumber: ""
+        phoneNumber: "",
+        url: ""
     })
+    const [file, setFile] = useState<any>(null)
 
 
     useEffect(() => {
@@ -34,17 +39,38 @@ const Profile: NextPage<IProfile> = () => {
                 lastName: response.data.lastName,
                 address: response.data.address,
                 role: response.data.role,
-                phoneNumber: response.data.phone
+                phoneNumber: response.data.phone,
+                url: response.data.url
             })
         }
 
         fetch()
     }, [])
 
+
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
         try {
-            const response = await useUpdateProfile(detail);
+
+            if (file) {
+                const dataForm = new FormData();
+
+                dataForm.append("image", file)
+
+                const client = await apiConfig()
+                await client.post(uploadAvatar, dataForm);
+            }
+
+            const response = await useUpdateProfile({ ...detail, url: undefined });
+
+            setDetail({
+                firstName: response.data.firstName,
+                lastName: response.data.lastName,
+                address: response.data.address,
+                role: response.data.role,
+                phoneNumber: response.data.phone,
+                url: response.data.url
+            })
 
             Swal.fire(
                 'Success Edit Data!',
@@ -62,11 +88,16 @@ const Profile: NextPage<IProfile> = () => {
 
     return (
         <div className="relative max-w-screen-xl flex flex-col items-center justify-center mx-auto p-4">
-            <Form className="bg-rose-600 w-8/12 rounded-md h-[90vh] p-4 mt-4" onSubmit={handleSubmit}>
-                <div className="flex flex-row justify-start items-center">
-                    <p className="my-2 mx-8">Photo</p>
-                    <Button className="m-2" color="primary">Upload</Button>
-                    <Button className="m-2">Remove</Button>
+            <Form className="bg-rose-600 w-8/12 rounded-md min-h-[90vh] p-4 mt-4" onSubmit={handleSubmit}>
+                <div className="flex flex-col justify-start items-center">
+                    <img src={detail.url} alt="photo" height={100} width={100} />
+                    <div className="flex flex-row justify-start items-center">
+                        <Input type="file" onChange={(e) => {
+                            if (e.target.files) {
+                                setFile(e.target.files[0])
+                            }
+                        }} />
+                    </div>
                 </div>
 
                 <div className="mt-4">
@@ -85,7 +116,13 @@ const Profile: NextPage<IProfile> = () => {
                         onChange={(e) => { setDetail({ ...detail, [e.target.name]: e.target.value }) }} />
                 </div>
 
-                <div className="w-full mt-[26vh]">
+                <div className="mt-4">
+                    <Input value={detail.address} label="Alamat" placeholder="Alamat" name="address"
+                        onChange={(e) => { setDetail({ ...detail, [e.target.name]: e.target.value }) }} />
+                </div>
+
+
+                <div className="w-full mt-16">
                     <Button className="w-full" color="success" type="submit">
                         Submit
                     </Button>
